@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-6 offset-3">
+		<h4 class="text-center mb-5">Inscrivez-vous</h4>
+		<form action="{% url 'signup' %}" method="post">
+			{% csrf_token %}
+			<div class="form-group mb-2">
+				<label class="form-label" for="username">Nom d'utilisateur</label>
+				<input aria-describedby="validationUsernameFeedback" class="form-control {% if error and error == 'username' %} is-invalid {% endif %}" type="text" id="username" placeholder="Nom d'utilisateur" name="username" required>
+				<div id="validationUsernameFeedback" class="invalid-feedback">
+					Ce nom d'utilisteur est déjà utilisé
+				</div>
+			</div>
+			<div class="form-group mb-2">
+				<label class="form-label" for="password">Mot de passe</label>
+				<input class="form-control {% if error and error == 'passwords' %} is-invalid {% endif %}" id="password" type="password" placeholder="Mot de passe" name="password" required>
+			</div>
+			<div class="form-group mb-2">
+				<label class="form-label" for="password-confirm">Mot de passe (Confirmation)</label>
+				<input aria-describedby="validationPasswordsFeedback" class="form-control {% if error and error == 'passwords' %} is-invalid {% endif %}" id="password-confirm" type="password" placeholder="Mot de passe (Confirmation)" name="password-confirm" required>
+				<div id="validationPasswordsFeedback" class="invalid-feedback">
+					Les mots de passe ne correspondent pas
+				</div>
+			</div>
+			<a href="{% url 'index' %}" class="btn btn-primary">Se connecter</a>
+			<button type="submit" class="btn btn-success float-end">S'inscrire</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
