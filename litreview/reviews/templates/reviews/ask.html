@@ -3,7 +3,13 @@
 {% block content %}
 <div class="row">
 	<div class="col-10 offset-2">
-		<h4>Créer un ticket</h4>
+		<h4 class="text-center">Créer un ticket</h4>
+
+		<form enctype="multipart/form-data" action="{% url 'reviews:ask' %}" method="post">
+			{% csrf_token %}
+			{{ form }}
+			<button type="submit" class="btn btn-primary float-end">Envoyer</button>
+		</form>
 	</div>
 </div>
 {% endblock content %}
