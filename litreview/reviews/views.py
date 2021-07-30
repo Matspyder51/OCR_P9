@@ -1,20 +1,28 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.db.models import Q, CharField, Value
+from itertools import chain
 
-from .models import Ticket, Request
+from .models import Ticket, Review
 from .forms import TicketCreateForm
 from authentification.models import UserFollows
 
 # Create your views here.
 def index(request):
 
-	FollowedUsers = UserFollows.objects.filter(user__exact=request.user)
-	Tickets = Ticket.objects.filter(user__exact=request.user)
-	Requests = Request.objects.filter(user__exact=request.user)
+	followed_users = UserFollows.objects.filter(user__exact=request.user)
+	tickets = Ticket.objects.filter(Q(user__id__in=followed_users.values_list('followed_user')) | Q(user__exact=request.user))
+	reviews = Review.objects.filter(Q(user__id__in=followed_users.values_list('followed_user')) | Q(user__exact=request.user))
 
-	print(FollowedUsers)
+	tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+	reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-	return render(request, 'reviews/index.html')
+	posts = sorted(
+		chain(reviews, tickets),
+		key=lambda post: post.time_created,
+		reverse=True
+	)
+
+	return render(request, 'reviews/index.html', {'posts': posts})
 
 def ask(request):
 	if request.method == "POST":
@@ -32,3 +40,6 @@ def ask(request):
 	else:
 		form = TicketCreateForm()
 	return render(request, 'reviews/ask.html', {'form': form})
+
+def create(request, ticket_id: int = None):
+	pass

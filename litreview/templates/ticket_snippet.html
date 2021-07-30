@@ -1,0 +1,29 @@
+{% load static %}
+<div class="col-12 mb-3">
+	<div class="border border-dark">
+		<div class="header d-flex p-2">
+			<div class="requested_by me-auto">
+				{% if post.user == request.user %}
+					Vous avez demander une critique
+				{% else %}
+					{{ post.user.username }} a demandé une critique
+				{% endif %}
+			</div>
+			<div class="date">
+				{{ post.time_created }}
+			</div>
+		</div>
+		<div class="title border-bottom border-light ps-2">
+			{{ post.title }}
+		</div>
+		<div class="description ps-2">
+			{{ post.description }}
+		</div>
+		{% if post.image != '' %}
+			<div class="image">
+				<img src="{% get_media_prefix %}{{ post.image }}" alt="ticket_image" class="img-thumbnail w-25">
+			</div>
+		{% endif %}
+		<a href="#" class="btn btn-secondary">Créer une critique</a>
+	</div>
+</div>

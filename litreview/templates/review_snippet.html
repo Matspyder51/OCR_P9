@@ -1,0 +1,43 @@
+{% load static %}
+{% load range %}
+<div class="col-12 mb-3">
+	<div class="border border-dark">
+		<div class="header d-flex p-2">
+			<div class="requested_by me-auto">
+				{% if post.user == request.user %}
+					Vous avez publier une critique
+				{% else %}
+					{{ post.user.username }} a publier une critique
+				{% endif %}
+			</div>
+			<div class="date">
+				{{ post.time_created }}
+			</div>
+		</div>
+		<div class="title fw-bold border-bottom border-light ps-2">
+			{{ post.headline }} - 
+			{% for i in post.rating|range %}
+				<i class="fas fa-star"></i>
+			{% endfor %}
+			{% for i in post.rating|range:5 %}
+				<i class="far fa-star"></i>
+			{% endfor %}
+		</div>
+		<div class="description ps-2">
+			{{ post.body }}
+		</div>
+		{% if post.ticket is not None %}
+			<div class="ticket border border-dark p-2 m-2">
+				Ticket - {{ post.ticket.user.username }}
+				<div class="title">
+					{{ post.ticket.title }}
+				</div>
+				{% if post.ticket.image %}
+					<div class="image">
+						<img src="{% get_media_prefix %}{{ post.ticket.image }}" alt="ticket_image" class="img-thumbnail w-25">
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</div>
