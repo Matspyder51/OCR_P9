@@ -1,13 +1,19 @@
+import os
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+
+def rename_image(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = "%s.%s" % (instance.user.id, ext)
+	return os.path.join('tickets', filename)
 
 # Create your models here.
 class Ticket(models.Model):
 	title = models.CharField(max_length=128)
 	description = models.TextField()
 	user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-	image = models.ImageField(null=True)
+	image = models.ImageField(null=True, upload_to=rename_image)
 	time_created = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):

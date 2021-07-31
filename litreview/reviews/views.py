@@ -35,6 +35,7 @@ def ask(request):
 			req.image = form.cleaned_data['image']
 			req.user = request.user
 			req.save()
+			return redirect('reviews:index')
 	else:
 		form = TicketCreateForm()
 	return render(request, 'reviews/ask.html', {'form': form})
