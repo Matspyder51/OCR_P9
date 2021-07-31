@@ -41,6 +41,7 @@
 		{% endif %}
 		{% if post.user == request.user %}
 			<a href="{% url 'reviews:edit' post.id %}" class="btn btn-warning m-1">Éditer ma critique</a>
+			<a href="{% url 'reviews:delete_review' post.id %}" class="btn btn-danger m-1">Supprimer ma critique</a>
 		{% endif %}
 	</div>
 </div>

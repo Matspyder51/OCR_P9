@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+	<div class="col-8 offset-2 mt-2">
+		{% for post in posts %}
+			{% if post.content_type == 'TICKET' %}
+				{% include 'ticket_snippet.html' %}
+			{% elif post.content_type == 'REVIEW' %}
+				{% include 'review_snippet.html' %}
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

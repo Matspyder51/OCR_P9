@@ -101,5 +101,33 @@ def edit(request, review_id: int):
 
 	return render(request, 'reviews/edit.html', {'form': form, 'review': review, 'ticket': Ticket.objects.get(id__exact=review.ticket.id)})
 
-def user_posts(request):
+def edit_ticket(request, ticket_id: int):
 	pass
+
+def delete_review(request, review_id: int):
+	rev = Review.objects.get(id__exact=review_id)
+	rev.delete()
+
+	return redirect('reviews:me')
+
+def delete_ticket(request, ticket_id: int):
+	ticket = Ticket.objects.get(id__exact=ticket_id)
+
+	ticket.delete()
+
+	return redirect('reviews:me')
+
+def user_posts(request):
+	tickets = Ticket.objects.filter(user__exact=request.user)
+	reviews = Review.objects.filter(user__exact=request.user)
+
+	tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+	reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+	posts = sorted(
+		chain(reviews, tickets),
+		key=lambda post: post.time_created,
+		reverse=True
+	)
+
+	return render(request, 'reviews/me.html', {'posts': posts})

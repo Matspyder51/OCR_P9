@@ -24,6 +24,11 @@
 				<img src="{% get_media_prefix %}{{ post.image }}" alt="ticket_image" class="img-thumbnail w-25">
 			</div>
 		{% endif %}
-		<a href="{% url 'reviews:create' post.id %}" class="btn btn-secondary">Créer une critique</a>
+		{% if post.user == request.user %}
+			<a href="{% url 'reviews:edit_ticket' post.id %}" class="btn btn-warning m-1">Éditer ma demande</a>
+			<a href="{% url 'reviews:delete_ticket' post.id %}" class="btn btn-danger m-1">Supprimer ma demande</a>
+		{% else %}
+			<a href="{% url 'reviews:create' post.id %}" class="btn btn-secondary">Créer une critique</a>
+		{% endif %}
 	</div>
 </div>
