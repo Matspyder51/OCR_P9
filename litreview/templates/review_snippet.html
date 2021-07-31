@@ -39,5 +39,8 @@
 				{% endif %}
 			</div>
 		{% endif %}
+		{% if post.user == request.user %}
+			<a href="{% url 'reviews:edit' post.id %}" class="btn btn-warning m-1">Éditer ma critique</a>
+		{% endif %}
 	</div>
 </div>

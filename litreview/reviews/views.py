@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.db.models import Q, CharField, Value
 from itertools import chain
 
 from .models import Ticket, Review
-from .forms import TicketCreateForm
+from .forms import TicketCreateForm, ReviewForm
 from authentification.models import UserFollows
 
 # Create your views here.
@@ -35,11 +35,71 @@ def ask(request):
 			req.image = form.cleaned_data['image']
 			req.user = request.user
 			req.save()
-		else:
-			print(form.errors)
 	else:
 		form = TicketCreateForm()
 	return render(request, 'reviews/ask.html', {'form': form})
 
-def create(request, ticket_id: int = None):
+def create(request, ticket_id = None):
+	context = {}
+
+	if ticket_id is not None:
+		ticket = Ticket.objects.get(id__exact=ticket_id)
+		as_reviewed = Review.objects.filter(user__exact=request.user, ticket_id__exact=ticket_id)
+		if len(as_reviewed) > 0:
+			return redirect('reviews:index')
+		context['ticket'] = ticket
+		context['form'] = ReviewForm()
+	else:
+		context["ticket_form"] = TicketCreateForm()
+		context['form'] = ReviewForm()
+
+	if request.method == "POST":
+		form = ReviewForm(request.POST)
+
+		ticket = None
+		if ticket_id is not None:
+			ticket = Ticket.objects.get(id__exact=ticket_id)
+		else:
+			form2 = TicketCreateForm(request.POST, request.FILES)
+
+			if form2.is_valid():
+				req = Ticket()
+				req.title = form2.cleaned_data['title']
+				req.description = form2.cleaned_data['description']
+				req.image = form2.cleaned_data['image']
+				req.user = request.user
+				req.save()
+				ticket = req
+
+		if form.is_valid():
+			rev = Review()
+			rev.headline = form.cleaned_data['headline']
+			rev.body = form.cleaned_data['body']
+			rev.rating = form.cleaned_data['rating']
+			rev.ticket = ticket
+			rev.user = request.user
+			rev.save()
+			return redirect('reviews:index')
+	
+	return render(request, 'reviews/create.html', context)
+
+def edit(request, review_id: int):
+	review = Review.objects.get(id__exact=review_id)
+	if request.method =="POST":
+		form = ReviewForm(request.POST)
+		if form.is_valid():
+			review.headline = form.cleaned_data['title']
+			review.body = form.cleaned_data['body']
+			review.rating = form.cleaned_data['rating']
+			review.save()
+			return redirect('reviews:index')
+
+	form = ReviewForm()
+	form.fields['title'].initial = review.headline
+	form.fields['body'].initial = review.body
+	form.fields['rating'].initial = review.rating
+
+	return render(request, 'reviews/edit.html', {'form': form, 'review': review, 'ticket': Ticket.objects.get(id__exact=review.ticket.id)})
+
+def user_posts(request):
 	pass

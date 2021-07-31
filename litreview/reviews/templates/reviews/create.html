@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+	<div class="col-10 offset-2">
+		<h4 class="text-center">Créer une critique</h4>
+		<form enctype="multipart/form-data" action="{% if ticket_id is not None %}{% url 'reviews:create' ticket_id %}{% else %}{% url 'reviews:create' %}{% endif %}" method="post">
+			{% csrf_token %}
+			{% if ticket is not None %}
+				<div class="ticket border border-dark p-1">
+					Vous êtes en train de poster en réponse à
+					<div class="ticket-infos border border-dark col-10 offset-1">
+						<div class="header d-flex p-2">
+							<div class="requested_by me-auto">
+								{% if ticket.user == request.user %}
+									Vous avez demander une critique
+								{% else %}
+									{{ ticket.user.username }} a demandé une critique
+								{% endif %}
+							</div>
+							<div class="date">
+								{{ ticket.time_created }}
+							</div>
+						</div>
+						<div class="title border-bottom border-light ps-2">
+							{{ ticket.title }}
+						</div>
+						<div class="description ps-2">
+							{{ ticket.description }}
+						</div>
+						{% if ticket.image != '' %}
+							<div class="image">
+								<img src="{% get_media_prefix %}{{ ticket.image }}" alt="ticket_image" class="img-thumbnail w-25">
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			{% else %}
+				<div class="border border-dark p-2">
+					{{ ticket_form }}
+				</div>
+			{% endif %}
+			<div class="review border border-dark p-2">
+				<div class="mb-2">
+					<label for="{{ form.headline.id_for_label }}">{{ form.headline.label }}</label>
+					{{ form.headline }}
+				</div>
+
+				<div>{{ form.rating.label }}</div>
+				{% for radio in form.rating %}
+					<div class="form-check form-check-inline">
+						{{ radio }}
+						<label for="{{ radio.id_for_label }}">{{ radio.label }}</label>
+					</div>
+				{% endfor %}
+
+				<div class="mb-2 mt-2">
+					<label for="{{ form.body.id_for_label }}">{{ form.body.label }}</label>
+					{{ form.body }}
+				</div>
+				<button type="submit" class="btn btn-primary">Envoyer</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock content %}

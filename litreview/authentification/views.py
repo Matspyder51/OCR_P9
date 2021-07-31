@@ -52,7 +52,7 @@ def signup(request):
 @login_required
 def auth_logout(request):
 	logout(request)
-	return redirect('index')
+	return redirect('authentification:index')
 
 @login_required
 def follows(request):
@@ -74,4 +74,4 @@ def delete_follow(request, user_id):
 	follow = UserFollows.objects.get(user__exact=request.user, followed_user__exact=user)
 	if follow is not None:
 		follow.delete()
-	return redirect('follows')
+	return redirect('authentification:follows')

@@ -24,6 +24,6 @@
 				<img src="{% get_media_prefix %}{{ post.image }}" alt="ticket_image" class="img-thumbnail w-25">
 			</div>
 		{% endif %}
-		<a href="#" class="btn btn-secondary">Créer une critique</a>
+		<a href="{% url 'reviews:create' post.id %}" class="btn btn-secondary">Créer une critique</a>
 	</div>
 </div>
