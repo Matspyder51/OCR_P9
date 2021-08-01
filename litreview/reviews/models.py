@@ -2,11 +2,16 @@ import os
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 
 
 def rename_image(instance, filename):
     ext = filename.split('.')[-1]
-    filename = "%s.%s" % (instance.user.id, ext)
+    filename = "%s_%s.%s" % (
+        instance.user.id,
+        get_random_string(8).lower(),
+        ext
+    )
     return os.path.join('tickets', filename)
 
 
