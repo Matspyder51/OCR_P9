@@ -118,14 +118,38 @@ def edit(request, review_id: int):
         'reviews/edit.html',
         {
             'form': form,
-            'review': review, 'ticket':
-            Ticket.objects.get(id__exact=review.ticket.id)
+            'review': review,
+            'ticket': Ticket.objects.get(id__exact=review.ticket.id)
         }
     )
 
 
 def edit_ticket(request, ticket_id: int):
-    pass
+    ticket = Ticket.objects.get(id__exact=ticket_id)
+
+    if request.method == "POST":
+        form = TicketCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            ticket.title = form.cleaned_data['title']
+            ticket.description = form.cleaned_data['description']
+            if form.cleaned_data['image'] is not None:
+                ticket.image = form.cleaned_data['image']
+            ticket.save()
+            return redirect('reviews:index')
+
+    form = TicketCreateForm()
+    form.fields['title'].initial = ticket.title
+    form.fields['description'].initial = ticket.description
+    form.fields['image'].initial = ticket.image
+
+    return render(
+        request,
+        'reviews/ask.html',
+        {
+            'form': form,
+            'ticket': ticket
+        }
+    )
 
 
 def delete_review(request, review_id: int):

@@ -9,7 +9,7 @@ urlpatterns = [
     path('create/<int:ticket_id>/', views.create, name='create'),
     path('edit/<int:review_id>/', views.edit, name='edit'),
     path(
-        'edit_ticket/<int:review_id>/',
+        'edit_ticket/<int:ticket_id>/',
         views.edit_ticket,
         name='edit_ticket'
     ),
