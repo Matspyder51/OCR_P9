@@ -19,7 +19,7 @@
 		<div class="description ps-2">
 			{{ post.description }}
 		</div>
-		{% if post.image != '' %}
+		{% if post.image and post.image != '' %}
 			<div class="image">
 				<img src="{% get_media_prefix %}{{ post.image }}" alt="ticket_image" class="img-thumbnail w-25">
 			</div>

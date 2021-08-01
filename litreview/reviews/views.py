@@ -132,7 +132,9 @@ def edit_ticket(request, ticket_id: int):
         if form.is_valid():
             ticket.title = form.cleaned_data['title']
             ticket.description = form.cleaned_data['description']
-            if form.cleaned_data['image'] is not None:
+            if form.cleaned_data['image'] is False:
+                ticket.image = None
+            elif form.cleaned_data['image'] is not None:
                 ticket.image = form.cleaned_data['image']
             ticket.save()
             return redirect('reviews:index')

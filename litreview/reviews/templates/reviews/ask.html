@@ -9,7 +9,7 @@
 		<form enctype="multipart/form-data" action="{% if ticket is not None %}{% url 'reviews:edit_ticket' ticket.id %}{% else %}{% url 'reviews:ask' %}{% endif %}" method="post">
 			{% csrf_token %}
 			{{ form }}
-			{% if ticket is not None %}
+			{% if ticket is not None and ticket.image %}
 				<img src="{% get_media_prefix %}{{ ticket.image }}" alt="ticket_image" class="img-thumbnail w-25">
 			{% endif %}
 			<button type="submit" class="btn btn-primary float-end">Envoyer</button>
