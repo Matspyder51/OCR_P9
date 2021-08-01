@@ -102,14 +102,14 @@ def edit(request, review_id: int):
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
-            review.headline = form.cleaned_data['title']
+            review.headline = form.cleaned_data['headline']
             review.body = form.cleaned_data['body']
             review.rating = form.cleaned_data['rating']
             review.save()
             return redirect('reviews:index')
 
     form = ReviewForm()
-    form.fields['title'].initial = review.headline
+    form.fields['headline'].initial = review.headline
     form.fields['body'].initial = review.body
     form.fields['rating'].initial = review.rating
 
