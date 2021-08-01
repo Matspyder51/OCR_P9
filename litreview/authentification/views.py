@@ -15,7 +15,7 @@ def index(request):
         password = request.POST['password']
         if not username or not password:
             context['error'] = True
-            context['message'] = "Veuillez renseigner vos informations de connexion"
+            context['message'] = "Veuillez entrer vos identifiants"
         else:
             user = authenticate(username=username, password=password)
             if user is not None:
