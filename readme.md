@@ -44,8 +44,9 @@ And finally, you can install the required packages for the project :
 
 ## Usage
 
-Inside the project folder run the command :
+Inside the project folder run the following commands :
 
+`cd litreview`
 `py manage.py runserver`
 
 2 defaults users are available :
